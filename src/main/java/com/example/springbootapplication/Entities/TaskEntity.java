@@ -18,6 +18,6 @@ public class TaskEntity {
     private int id;
     private String title;
     private String description;
-    private Date deadline; //TODO PARSING
+    private Date deadline;
     private boolean completed;
 }

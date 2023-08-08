@@ -4,8 +4,7 @@ package com.example.springbootapplication.service;
 import com.example.springbootapplication.Entities.TaskEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.text.DateFormat;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -17,28 +16,32 @@ public class TaskService {
     private ArrayList<TaskEntity> tasks = new ArrayList<>();
     private int taskId = 1;
 
-    public void addTask(String title, String description , String deadline)  {
-        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-        Date date =null;
+    private final SimpleDateFormat deadlineFormatter = new SimpleDateFormat("yyyy-MM-dd");
+
+    //public TaskEntity addTask(String title, String description , String deadline) throws ParseException {
+        public TaskEntity addTask(String title, String description , String deadline) throws ParseException  {
+      /* // DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+      //  Date date =null;
         try {
-             date = formatter.parse(deadline);
+            date = formatter.parse(deadline);
+            task.setDeadline(deadlineFormatter.parse(deadline));
+
         }
         catch (ParseException e)
         {
            log.error("not able to parse date");
-            date= null;
-        }
+            //date= null;
+        }*/
         TaskEntity task =  TaskEntity.builder()
-                .id(taskId)
+               .id(taskId)
                 .title(title)
                 .description(description)
-                .deadline(date)
+                .deadline((deadlineFormatter.parse(deadline)))
                 .completed(false)
                 .build();
         tasks.add(task);
         taskId++;
-    }
-
+        return null;}
     public ArrayList<TaskEntity> getTasks() {
         return tasks;
     }
@@ -50,5 +53,22 @@ public class TaskService {
             }
         }
         return null;
+    }
+
+    public TaskEntity updateTask(int id, String description, String deadline, Boolean completed) throws ParseException {
+        TaskEntity task = getTaskById(id);
+        if (task == null) {
+            return null;
+        }
+        if (description != null) {
+            task.setDescription(description);
+        }
+        if (deadline != null) {
+            task.setDeadline(deadlineFormatter.parse(deadline));
+        }
+        if (completed != null) {
+            task.setCompleted(completed);
+        }
+        return task;
     }
 }
