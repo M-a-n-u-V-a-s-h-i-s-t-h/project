@@ -2,6 +2,7 @@ package com.example.springbootapplication.service;
 
 
 import com.example.springbootapplication.Entities.TaskEntity;
+import com.example.springbootapplication.Repository.TaskRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,11 +10,14 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Service
 @Slf4j
 public class TaskService {
-    private ArrayList<TaskEntity> tasks = new ArrayList<>();
+   // private ArrayList<TaskEntity> tasks = new ArrayList<>();
+    @Autowired
+    TaskRepository T;
     private int taskId = 1;
 
     private final SimpleDateFormat deadlineFormatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -38,22 +42,23 @@ public class TaskService {
                 .description(description)
                 .deadline((deadlineFormatter.parse(deadline)))
                 .completed(false)
+                .notes(new ArrayList<>())
                 .build();
-        tasks.add(task);
+        T.save(task);
+           // task.setNotes(new ArrayList<>());
+
         taskId++;
         return null;}
-    public ArrayList<TaskEntity> getTasks() {
-        return tasks;
+    public List<TaskEntity> getTasks() {
+        return T.findAll();
     }
 
     public TaskEntity getTaskById(int id) {
-        for (TaskEntity task : tasks) {
-            if (task.getId() == id) {
-                return task;
-            }
+
+       return T.findById(id).get();
         }
-        return null;
-    }
+
+
 
     public TaskEntity updateTask(int id, String description, String deadline, Boolean completed) throws ParseException {
         TaskEntity task = getTaskById(id);
