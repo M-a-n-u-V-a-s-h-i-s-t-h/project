@@ -2,6 +2,9 @@ package com.example.springbootapplication.service;
 
 import com.example.springbootapplication.Entities.NoteEntity;
 import com.example.springbootapplication.Entities.TaskEntity;
+import com.example.springbootapplication.Repository.NoteRepository;
+import com.example.springbootapplication.Repository.TaskRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -11,6 +14,8 @@ import java.util.List;
 @Service
 public class NotesService {
     private TaskService taskService;
+    @Autowired
+    NoteRepository N;
     private HashMap<Integer, TaskNotesHolder> taskNoteHolders = new HashMap<>();
 
     public NotesService(TaskService taskService) {
@@ -47,6 +52,7 @@ public class NotesService {
         note.setTitle(title);
         note.setBody(body);
         taskNotesHolder.notes.add(note);
+        N.save(note);
         taskNotesHolder.noteId++;
         return note;
     }
